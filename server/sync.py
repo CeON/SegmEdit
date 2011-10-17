@@ -37,7 +37,7 @@ def init():
         print 'Creating table articles'
         cur.execute("""
             CREATE TABLE articles (
-                issn     TEXT          PRIMARY KEY,
+                fileid   TEXT          PRIMARY KEY,
                 title    TEXT NOT NULL,
                 status   TEXT NOT NULL DEFAULT "unlocked",
                 comment  TEXT NOT NULL DEFAULT "",
@@ -69,11 +69,11 @@ def insert():
     conn2 = sqlite3.connect('doaj.sqlite')
     cur2 = conn2.cursor()
     for doc in docs:
-        if not cur.execute('SELECT COUNT(*) FROM articles WHERE issn = ?', (doc,)).fetchone()[0]:
-            row = cur2.execute('SELECT atitle FROM article WHERE issn = ?', (doc,)).fetchone()
+        if not cur.execute('SELECT COUNT(*) FROM articles WHERE fileid = ?', (doc,)).fetchone()[0]:
+            row = cur2.execute('SELECT atitle FROM article WHERE fileid = ?', (doc,)).fetchone()
             if row:
                 print 'Adding article %s with title "%s"' % (doc, row[0])
-                cur.execute('INSERT INTO articles (issn, title) VALUES (?, ?)', (doc, row[0]))
+                cur.execute('INSERT INTO articles (fileid, title) VALUES (?, ?)', (doc, row[0]))
             else:
                 print 'Could not find info for article %s' % doc
 

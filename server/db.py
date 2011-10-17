@@ -52,20 +52,20 @@ class Database(object):
         self.conn.isolation_level = None
 
     def getDocument(self, id):
-        row = self.conn.execute('SELECT * FROM articles WHERE issn = ?', (id,)).fetchone()
+        row = self.conn.execute('SELECT * FROM articles WHERE fileid = ?', (id,)).fetchone()
         return Document(*row) if row else None
 
     def setDocumentComment(self, username, id, comment):
         sql = """
             UPDATE articles SET comment = ?3
-            WHERE issn = ?2 AND username = ?1"""
+            WHERE fileid = ?2 AND username = ?1"""
         return bool(self.conn.execute(sql, (username, id, comment)).rowcount)
 
     def setDocumentStatus(self, username, id, status):
         sql = """
             UPDATE articles
             SET status = ?3, username = ?1
-            WHERE issn = ?2 AND ((status != "locked" AND ?3 = "locked") OR
+            WHERE fileid = ?2 AND ((status != "locked" AND ?3 = "locked") OR
                                  (status = "locked" AND username = ?1))"""
         return bool(self.conn.execute(sql, (username, id, status)).rowcount)
 
@@ -74,7 +74,7 @@ class Database(object):
         return [Document(*row) for row in self.conn.execute(sql)]
 
     def canSendXML(self, username, id):
-        row = self.conn.execute('SELECT status, username FROM articles WHERE issn = ?', (id,)).fetchone()
+        row = self.conn.execute('SELECT status, username FROM articles WHERE fileid = ?', (id,)).fetchone()
         if row:
             return row[0] == 'locked' and row[1] == username
         else:
