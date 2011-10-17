@@ -1,0 +1,66 @@
+About SegmEdit
+==============
+
+SegmEdit allows to browse and edit XML files (in TrueViz format) containing
+information about structure of PDF documents (words, lines, zones) and about
+zones' classification (title, author, abstract, etc.) One of the components
+of the solution is a server responsible for distribution of documents to be
+processed.
+
+SegmEdit was created in order to create a test suite for page segmentation
+and zone classification algorithms, which are part of a metadata extraction
+framework developed at CeON.
+
+It is an open source software, wrote in Python using wxWidgets library and
+ImageMagick software suite.
+
+
+Dependencies
+============
+
+To run the application SegmEdit you need:
+
+* Python 2.6 or 2.7
+* python-wxgtk2.8
+* ImageMagick
+* GhostScript
+
+To run server:
+
+* Bottle Python Web Framework
+
+
+How to run
+==========
+
+** Application:
+
+type ./segmedit.py
+
+** Server:
+
+To use the application, there's no need to run server. 
+
+You have to prepare a sqlite3 database called doaj.db with a table:
+
+create table article (url TEXT, atitle TEXT, authors TEXT,
+    fileid TEXT, year TEXT, volume TEXT, issue TEXT, pages TEXT);
+
+Put into this table informations about all files you have. The field 
+'fileid' must contain the filename without extension. The field 'atitle'
+is recommended, all the rest is optional.
+
+Put your pdf files into directory 'pdfs', as '<fileid>.pdf', and the xml 
+files into directory 'xmls', as '<fileid>.xml'. 
+
+Type ./sync.pl to create a 'db.sqlite' file. Re-run this file after changes 
+in 'pdfs' and 'xmls' directories.
+
+Type ./server.py to run a server.
+
+
+Contact
+=======
+
+Krzysztof Rusek <kr292291@students.mimuw.edu.pl>
+Artur Czeczko <a.czeczko@icm.edu.pl>
