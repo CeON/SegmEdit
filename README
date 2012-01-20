@@ -18,14 +18,14 @@ ImageMagick software suite.
 Dependencies
 ============
 
-To run the application SegmEdit you need:
+To run the application SegmEdit GUI you need:
 
 * Python 2.6 or 2.7
 * python-wxgtk2.8
 * ImageMagick
 * GhostScript
 
-To run server:
+To run SegmServer:
 
 * Bottle Python Web Framework
 
@@ -33,11 +33,12 @@ To run server:
 How to run
 ==========
 
-** Application:
+** SegmEdit GUI:
 
-type ./segmedit.py
+1. Change directory to SegmEditGUI
+2. Type ./segmedit.py
 
-** Server:
+** SegmServer:
 
 To use the application, there's no need to run server. 
 
