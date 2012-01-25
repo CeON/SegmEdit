@@ -79,7 +79,7 @@ def list_docs():
 
 
 def reset_db():
-    print >> sys.stderr, 'Are you sure to delete ALL articles from database? [y,N] ',
+    print >> sys.stderr, 'Are you sure to delete ALL articles from database (y/[n])? ',
     resp = raw_input()
     if resp in ('y', 'Y'):
         print 'Deleting articles from database (PDF and XML files are not touched)'
@@ -92,14 +92,14 @@ def sync_db():
     docs = None
 
     # finding xmls
-    r = re.compile(r'^(.{8})\.xml$')
+    r = re.compile(r'(.*)\.xml$')
     for name in os.listdir(config.XMLS_DIR):
         m = r.match(name)
         if m:
             xmls.add(m.group(1))
     
     # finding pdfs
-    r = re.compile(r'^(.{8})\.pdf$')
+    r = re.compile(r'(.*)\.pdf$')
     for name in os.listdir(config.PDFS_DIR):
         m = r.match(name)
         if m:
@@ -108,38 +108,44 @@ def sync_db():
     docs = xmls & pdfs
 
     for xml in xmls - pdfs:
-        print >> sys.stderr, 'Missing pdf file for xml "%s.xml"' % xml
+        print >> sys.stderr, 'Missing %s.pdf file for xml %s.xml' % \
+            (config.PDFS_DIR + os.sep + xml, xml)
     for pdf in pdfs - xmls:
-        print >> sys.stderr, 'Missing xml file for pdf "%s.pdf"' % pdf
+        print >> sys.stderr, 'Missing %s.xml file for pdf %s.pdf' % \
+            (config.XMLS_DIR + os.sep + pdf, pdf)
 
+    count = 0
     for doc in docs:
+        title = 'Article ' + doc
         if not cur.execute('SELECT COUNT(*) FROM articles WHERE fileid = ?', (doc,)).fetchone()[0]:
-            print 'Adding article %s with title "%s"' % (doc, row[0])
-            cur.execute('INSERT INTO articles (fileid, title) VALUES (?, ?)', (doc, 'Article ' + doc))
+            print 'Adding article %s with title "%s"' % (doc, title)
+            cur.execute(u'INSERT INTO articles (fileid, title) VALUES (?, ?)', (doc, title))
+            count += 1
+    print "%d articles added to database" % count
 
 
 def add_article():
     if len(sys.argv) < 3:
         print >> sys.stderr, 'Missing article index (filename without extension)'
         exit(1)
-    fileid = sys.argv[2]
+    fileid = sys.argv[2].decode('utf-8')
     if len(sys.argv) > 3:
-        title = sys.argv[3]
+        title = sys.argv[3].decode('utf-8')
     else:
-        title = 'Article ' + fileid
+        title = u'Article ' + fileid
 
     if not os.path.isfile(config.XMLS_DIR + os.path.sep + fileid + '.xml'):
-        print >> sys.stderr, 'Missing %s.xml file' % fileid
+        print >> sys.stderr, u'Missing %s.xml file' % (config.XMLS_DIR + os.sep + fileid, )
         exit(1)
     if not os.path.isfile(config.PDFS_DIR + os.path.sep + fileid + '.pdf'):
-        print >> sys.stderr, 'Missing %s.pdf file' % fileid
+        print >> sys.stderr, u'Missing %s.pdf file' % (config.PDFS_DIR + os.sep + fileid, )
         exit(1)
 
-    if not cur.execute('SELECT COUNT(*) FROM articles WHERE fileid = ?', (fileid,)).fetchone()[0]:
-        print 'Adding article %s with title "%s"' % (fileid, title)
-        cur.execute('INSERT INTO articles (fileid, title) VALUES (?, ?)', (fileid, title))
+    if not cur.execute(u'SELECT COUNT(*) FROM articles WHERE fileid = ?', (fileid,)).fetchone()[0]:
+        print u'Adding article %s with title "%s"' % (fileid, title)
+        cur.execute(u'INSERT INTO articles (fileid, title) VALUES (?, ?)', (fileid, title))
     else:
-        print >> sys.stderr, 'Article %s already in database' % fileid
+        print >> sys.stderr, u'Article %s already in database' % fileid
         exit(1)
 
 
@@ -147,16 +153,16 @@ def del_article():
     if len(sys.argv) < 3:
         print >> sys.stderr, 'Missing article index (filename without extension)'
         exit(1)
-    fileid = sys.argv[2]
+    fileid = sys.argv[2].decode("utf-8")
 
-    if cur.execute('SELECT COUNT(*) FROM articles WHERE fileid = ?', (fileid,)).fetchone()[0]:
-        print >> sys.stderr, 'Are you sure to delete article %s from database? [y,N] ' % fileid, 
+    if cur.execute(u'SELECT COUNT(*) FROM articles WHERE fileid = ?', (fileid,)).fetchone()[0]:
+        print >> sys.stderr, u'Are you sure to delete article %s from database (y/[n])? ' % fileid, 
         resp = raw_input()
         if resp in ('y', 'Y'):
-            print 'Deleting article %s from database (PDF and XML files are not touched)' % fileid
-            cur.execute('DELETE FROM articles WHERE fileid = ?', (fileid,))
+            print u'Deleting article %s from database (PDF and XML files are not touched)' % fileid
+            cur.execute(u'DELETE FROM articles WHERE fileid = ?', (fileid,))
     else:
-        print >> sys.stderr, 'Article %s not in database' % fileid
+        print >> sys.stderr, u'Article %s not in database' % fileid
         exit(1)
 
 if __name__ == "__main__":
