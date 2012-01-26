@@ -37,7 +37,7 @@ def init():
     cur = conn.cursor()
 
     if not cur.execute('SELECT COUNT(*) FROM sqlite_master WHERE name = "articles"').fetchone()[0]:
-        print 'Creating table articles'
+        print 'Creating table "articles"'
         cur.execute("""
             CREATE TABLE articles (
                 fileid   TEXT          PRIMARY KEY,
@@ -53,23 +53,23 @@ def print_help():
     print 'Usage:'
     print ''
     print '  %s help' % sys.argv[0]
-    print '      -- prints this help'
+    print '      -- prints help'
     print ''
     print '  %s list' % sys.argv[0]
-    print '      -- lists available articles'
+    print '      -- lists all available articles'
     print ''
     print '  %s reset_db' % sys.argv[0]
-    print '      -- cleans database of available articles (do not touch files)'
+    print '      -- removes all available articles from database (files are not removed)'
     print ''
     print '  %s sync_db' % sys.argv[0]
-    print '      -- creates indexes to files existing in directories, sets generic titles.'
-    print '         If you want to set a title, use the "add" command'
+    print '      -- creates indexes of files in the database and sets generic titles.'
+    print '         To set a specific title, use the "add" command'
     print ''
     print '  %s add <fileid> [<title>]' % sys.argv[0]
-    print '      -- adds into database info about an article'
+    print '      -- adds info about an article to the database'
     print ''
     print '  %s del <fileid>' % sys.argv[0]
-    print '      -- deletes from database info abuot an article'
+    print '      -- deletes info about an article from the database'
     print ''
 
 
@@ -79,10 +79,10 @@ def list_docs():
 
 
 def reset_db():
-    print >> sys.stderr, 'Are you sure to delete ALL articles from database (y/[n])? ',
+    print >> sys.stderr, 'Are you sure you want to delete ALL articles from database (y/[n])? ',
     resp = raw_input()
     if resp in ('y', 'Y'):
-        print 'Deleting articles from database (PDF and XML files are not touched)'
+        print 'Deleting articles from database (PDF and XML files will not be deleted)'
         cur.execute('DELETE FROM articles')
 
 
@@ -156,10 +156,10 @@ def del_article():
     fileid = sys.argv[2].decode("utf-8")
 
     if cur.execute(u'SELECT COUNT(*) FROM articles WHERE fileid = ?', (fileid,)).fetchone()[0]:
-        print >> sys.stderr, u'Are you sure to delete article %s from database (y/[n])? ' % fileid, 
+        print >> sys.stderr, u'Are you sure you want to delete article %s from database (y/[n])? ' % fileid, 
         resp = raw_input()
         if resp in ('y', 'Y'):
-            print u'Deleting article %s from database (PDF and XML files are not touched)' % fileid
+            print u'Deleting article %s from database (PDF and XML files will not be deleted)' % fileid
             cur.execute(u'DELETE FROM articles WHERE fileid = ?', (fileid,))
     else:
         print >> sys.stderr, u'Article %s not in database' % fileid
