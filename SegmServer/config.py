@@ -26,8 +26,8 @@ SERVER_ROOT = os.path.realpath(os.path.dirname(__file__))
 
 DEBUG = True
 
-XMLS_DIR = SERVER_ROOT + os.path.sep + 'xmls'
-PDFS_DIR = SERVER_ROOT + os.path.sep + 'pdfs'
+XMLS_DIR = SERVER_ROOT + os.path.sep + u'xmls'
+PDFS_DIR = SERVER_ROOT + os.path.sep + u'pdfs'
 DATABASE_FILE = SERVER_ROOT + os.path.sep + 'db.sqlite'
 
 ADMINS = set(['admin'])
