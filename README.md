@@ -18,8 +18,8 @@ ImageMagick software suite.
 Authors
 =======
 
-Krzysztof Rusek <kr292291@students.mimuw.edu.pl>
-Artur Czeczko <a.czeczko@icm.edu.pl>
+* Krzysztof Rusek <kr292291@students.mimuw.edu.pl>
+* Artur Czeczko <a.czeczko@icm.edu.pl>
 
 
 Documentation
