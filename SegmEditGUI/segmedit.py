@@ -20,7 +20,7 @@
 # along with SegmEdit.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import wx, re, os, pwd, sys
+import wx, re, os, sys
 from wx.lib.pubsub import Publisher as pub
 import config, gui, readpdf, network
 import fasttrueviz as trueviz
@@ -156,7 +156,7 @@ class Application(wx.App):
         else:
             prof = profile.current()
             retvalue = self.frame.selectFile(message='Select an XML (Trueviz) file',
-                wildcard='XML files (*.xml)|*.xml;*.XML|All files (*)|*',
+                wildcard='XML files (*.cxml)|*.cxml;*.CXML|XML files (*.xml)|*.xml;*.XML|All files (*)|*',
                 directory=prof.get("lastXmlDirectory", ""))
 
             if retvalue:
@@ -195,7 +195,7 @@ class Application(wx.App):
 
             if  path:
                 # and open the PDF file
-                filebasere = re.match(r'(.*\.)[xX][mM][lL]', retvalue[1])
+                filebasere = re.match(r'(.*\.)[cC]?[xX][mM][lL]', retvalue[1])
                 if filebasere:
                     filebase = filebasere.groups()[0]
                     pathbase1 = os.path.sep.join((retvalue[0], filebase))
@@ -210,8 +210,6 @@ class Application(wx.App):
     def openNet(self, message):
         prof = profile.current()
         if 'username' not in prof:
-            username = self.frame.textDialog('Enter username:',
-                default=pwd.getpwuid(os.getuid())[0])
             if username is None:
                 return
             if not re.match(r'[a-zA-Z0-9_]+', username):
