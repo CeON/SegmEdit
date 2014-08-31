@@ -20,7 +20,7 @@
 # along with SegmEdit.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import os
+import os, sys
 from configtypes import ShapeStyle, ZoneLabel
 
 MAIN_WINDOW_SIZE = (1024, 700)
@@ -45,6 +45,7 @@ ZONE_LABELS = [
     ZoneLabel('author', 'Author', ShapeStyle((255, 180, 180, 90))),
     ZoneLabel('bib_info', 'Bibliographic info', ShapeStyle((30, 100, 30, 127))),
     ZoneLabel('body', 'Body', ShapeStyle((180, 180, 255, 90))),
+    ZoneLabel('body_content', 'Body', ShapeStyle((180, 180, 255, 90))),
     ZoneLabel('copyright', 'Copyright/License', ShapeStyle((103, 255, 52, 127))),
     ZoneLabel('correspondence', 'Correspondence', ShapeStyle((30, 30, 100, 127))),
     ZoneLabel('dates', 'Dates', ShapeStyle((100, 90, 0, 127))),
@@ -75,7 +76,7 @@ VAR_DIRECTORY = os.environ['HOME'] + os.path.sep + "segmedit_cache"
 INDEX_FILE = VAR_DIRECTORY + os.path.sep + "index.sqlite"
 
 CONVERT_DPI = 300
-CONVERT = "/usr/bin/convert"
+CONVERT = "convert" if sys.platform == "win32" else "/usr/bin/convert"
 CONVERT_OPTIONS = "-density " + str(CONVERT_DPI)
 
 XML_PAGE_DELTA_X = 0
