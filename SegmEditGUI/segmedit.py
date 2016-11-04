@@ -156,7 +156,7 @@ class Application(wx.App):
         else:
             prof = profile.current()
             retvalue = self.frame.selectFile(message='Select an XML (Trueviz) file',
-                wildcard='XML files (*.cxml)|*.cxml;*.CXML|XML files (*.xml)|*.xml;*.XML|All files (*)|*',
+                wildcard='XML files (*.cermstr)|*.cermstr;*.CXML|XML files (*.xml)|*.xml;*.XML|All files (*)|*',
                 directory=prof.get("lastXmlDirectory", ""))
 
             if retvalue:
@@ -195,7 +195,7 @@ class Application(wx.App):
 
             if  path:
                 # and open the PDF file
-                filebasere = re.match(r'(.*\.)[cC]?[xX][mM][lL]', retvalue[1])
+                filebasere = re.match(r'(.*\.)(cermstr|xml)', retvalue[1], re.IGNORECASE)
                 if filebasere:
                     filebase = filebasere.groups()[0]
                     pathbase1 = os.path.sep.join((retvalue[0], filebase))
@@ -327,7 +327,7 @@ class Application(wx.App):
                 self.frame.enableMenuItems(save=False)
             else: # save as...
                 retvalue = self.frame.selectFile(message='Save as...', save=True,
-                    wildcard='XML files (*.xml)|*.xml;*.XML|All files (*)|*')
+                    wildcard='XML files (*.cermstr)|*.cermstr;*.XML|All files (*)|*')
                 if retvalue:
                     path = os.path.sep.join(retvalue)
                     self.runTask('Saving XML document...', self.xml.save, (path),)
