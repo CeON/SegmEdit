@@ -27,6 +27,6 @@ Documentation
 
 See files:
 
-    SegmEditGUI/SEGMEDITGUI-HELP
-    SegmServer/SEGMSERVER-HELP
+* [SegmEditGUI/SEGMEDITGUI-HELP](https://github.com/CeON/SegmEdit/blob/master/SegmEditGUI/SEGMEDITGUI-HELP.md)
+* [SegmServer/SEGMSERVER-HELP](https://github.com/CeON/SegmEdit/blob/master/SegmServer/SEGMSERVER-HELP.md)
 
